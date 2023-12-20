@@ -1,0 +1,4 @@
+{:paths ["src"]
+ :deps {town.lilac/dxl {:local/root "../../"}
+        thheller/shadow-cljs {:mvn/version "LATEST"}
+        reagent/reagent {:mvn/version "1.2.0"}}}
