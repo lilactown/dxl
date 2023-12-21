@@ -78,6 +78,10 @@
   (string/starts-with? (name k) "on"))
 
 
+(def event-handler-name
+  {:on-click "click"})
+
+
 (defn reactive?
   [form]
   (or (= '! form)
@@ -118,9 +122,13 @@
             set-prop (fn [k v]
                        (cond
                          ;; TODO handle booleans
-                         (contains? properties k) `(set! (. ~el ~(property k)) ~v)
+                         (contains? properties k)
+                         `(set! (. ~el ~(property k)) ~v)
+
                          ;; TODO handle delegation in CLJS
-                         (event-handler? k) `(.addEventHandler ~el ~(name k) ~v)
+                         (event-handler? k)
+                         `(.addEventListener ~el ~(event-handler-name k) ~v)
+
                          ;; TODO handle string conversion
                          :else `(.setAttribute ~el ~(name k) ~v)))]
         `(let [~el ~constructor]
@@ -132,10 +140,7 @@
                  (set-prop k v)))
            ~@(for [child children]
                (if (reactive? child)
-                 `(let [rt# *runtime*]
-                    (-effect *runtime*
-                             (fn [] (binding [*runtime* rt#]
-                                      (.appendChild ~el (node ~child))))))
+                 `(insert! ~el (fn [] ~child))
                  `(.appendChild ~el (node ~child))))
            ~el))
       constructor)))

@@ -5,7 +5,7 @@
 
 (defn node
   [x]
-  (if (string? x)
+  (if (or (string? x) (number? x))
     (js/document.createTextNode x)
     x))
 
@@ -28,6 +28,24 @@
 (defn set-default-runtime!
   [runtime]
   (set! *runtime* runtime))
+
+
+(defn insert!
+  ([parent f]
+   (let [*prev (atom nil)
+         rt *runtime*]
+     (-effect
+      *runtime*
+      (fn []
+        (binding [*runtime* rt]
+          (if-let [prev @*prev]
+            (doto (node (f))
+              (as-> node (.replaceChild parent node prev)) ; el.rC(new, old)
+              (->> (reset! *prev)))
+            (doto (node (f))
+              (->> (.appendChild parent))
+              (->> (reset! *prev)))))))))
+  ([parent f sibling]))
 
 
 (defn !
