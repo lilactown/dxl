@@ -2,6 +2,7 @@
  :builds {:app {:target :browser
                 :output-dir "public/js"
                 :asset-path "/js"
-                :modules {:main {:entries [app.main]}}
+                :modules {:main {:entries [app.main]
+                                 :init-fn app.main/start!}}
                 :devtools {:http-root "public"
                            :http-port 3456}}}}

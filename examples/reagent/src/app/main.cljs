@@ -5,22 +5,23 @@
    [reagent.ratom :as r]))
 
 
-(def state (r/atom true))
+(def state (r/atom 0))
 
 (comment
-  (reset! state false)
+  (swap! state inc)
 
-  (reset! state true)
+  (swap! state dec)
 )
 
 
 (defn app
   []
+  (prn :app)
   (d/element "div"
-    ;; {:class (if (! state) "foo" "bar")}
-    (if (! state)
-      "foo"
-      "bar")))
+    (! state)
+    (d/element "button"
+      {:on-click #(swap! state inc)}
+      "inc")))
 
 
 (comment
