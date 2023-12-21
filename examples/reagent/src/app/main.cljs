@@ -5,31 +5,24 @@
    [reagent.ratom :as r]))
 
 
-(def state (r/atom 0))
-
-(comment
-  (swap! state inc)
-
-  (swap! state dec)
-)
+(defn counter
+  []
+  (let [*state (r/atom 0)]
+    ($ :div
+      ($ :button
+        {:on-click #(swap! *state dec)}
+        "dec")
+      (! *state)
+      ($ :button
+        {:on-click #(swap! *state inc)}
+        "inc"))))
 
 
 (defn app
   []
-  (prn :app)
   ($ :div
-    (! state)
-    ($ :button
-      {:on-click #(swap! state inc)}
-      "inc")))
-
-
-(comment
-  (macroexpand
-   '($ :div
-       (if (! state)
-         "foo"
-         "bar"))))
+    ($ counter)
+    ($ counter)))
 
 
 (defn ^:dev/after-load start!
