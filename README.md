@@ -1,7 +1,7 @@
 # dxl
 
-dxl is a ClojureScript library for constructing "**D**OM E**x**pressions." It is
-heavily inspired by [ryansolid/dom-expressions](https://github.com/ryansolid/dom-expressions/tree/main)
+dxl is the "**D**OM E**x**pression **L**anguage", a library for building web UI
+frameworks heavily inspired by [ryansolid/dom-expressions](https://github.com/ryansolid/dom-expressions/tree/main)
 used by [SolidJS](https://github.com/solidjs/solid).
 
 
@@ -10,11 +10,11 @@ used by [SolidJS](https://github.com/solidjs/solid).
 ```clojure
 (ns user
   (:require
-    [dx.core :as d :refer [!]]))
+    [dxl.core :as d :refer [! $]]))
 
-(d/div) ;; compiles to (.createElement js/document "div")
+($ :div) ;; compiles to (.createElement js/document "div")
 
-(d/input {:type "text"})
+($ :input {:type "text"})
 ;; compiles to
 ;; (let [^js el0 (.createElement js/document "input")]
 ;;   (set! (.-type el0) "text")
@@ -22,12 +22,12 @@ used by [SolidJS](https://github.com/solidjs/solid).
 
 
 (let [class (atom "foo")]
-  (d/div {:class (! class)}))
+  ($ :div {:class (! class)}))
 ;; compiles to
 ;; (let [class (atom "foo")]
 ;;   (let [^js el1 (.createElement js/document "div")]
-;;     (dx.core/run!
+;;     (dx.core/-effect *runtime*
 ;;       (fn []
-;;         (set! (.-className el1) (! class))))
+;;         (set! (.-className el1) (-current *runtime* class))))
 ;;     el1))
 ```
