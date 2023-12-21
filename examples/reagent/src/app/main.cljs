@@ -1,6 +1,6 @@
 (ns app.main
   (:require
-   [dxl.core :as d :refer [!]]
+   [dxl.core :as d :refer [! $]]
    [dxl.reagent :as dr]
    [reagent.ratom :as r]))
 
@@ -17,19 +17,19 @@
 (defn app
   []
   (prn :app)
-  (d/element "div"
+  ($ :div
     (! state)
-    (d/element "button"
+    ($ :button
       {:on-click #(swap! state inc)}
       "inc")))
 
 
 (comment
   (macroexpand
-   '(d/element "div"
-      (if (! state)
-        "foo"
-        "bar"))))
+   '($ :div
+       (if (! state)
+         "foo"
+         "bar"))))
 
 
 (defn ^:dev/after-load start!

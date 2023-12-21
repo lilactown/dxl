@@ -171,7 +171,7 @@
                            [(first params) (rest params)]
                            [nil params])]
     (if (keyword? type)
-      `(element ~(name type) ~params)
+      `(element ~(name type) ~@params)
       `(component ~type (assoc ~props :children ~children)))))
 
 
